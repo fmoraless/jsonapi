@@ -5,6 +5,7 @@ namespace Tests\Feature\Articles;
 use App\Models\Article;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use PhpParser\Node\Scalar\String_;
 use Tests\TestCase;
 
 class ListArticlesTest extends TestCase
@@ -13,10 +14,24 @@ class ListArticlesTest extends TestCase
     /** @test */
     public function can_fetch_a_single_article()
     {
+        $this->withoutExceptionHandling();
+
         $article = Article::factory()->create();
 
-        $response = $this->getJson('/api/v1/articles/'.$article->getRouteKey());
+        /*$response = $this->getJson('/api/v1/articles/'.$article->getRouteKey());*/
+        $response = $this->getJson(route('api.v1.articles.show', $article));
 
-        $response->assertSee($article->title);
+        $response->assertExactJson([
+            'data' => [
+                'type' => 'articles',
+                'id' => (string) $article->getRouteKey(),
+                'attributes' => [
+                    'title' => $article->title,
+                    'slug' => $article->slug,
+                    'content' => $article->content
+                ],
+                'self' => route('api.v1.articles.show', $article)
+            ],
+        ]);
     }
 }
