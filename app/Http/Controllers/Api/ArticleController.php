@@ -19,4 +19,15 @@ class ArticleController extends Controller
     {
         return ArticleCollection::make(Article::all());
     }
+
+    public function create(Request $request)
+    {
+        $article = Article::create([
+            'title' => $request->input('data.attributes.title'),
+            'slug' => $request->input('data.attributes.slug'),
+            'content' => $request->input('data.attributes.content')
+        ]);
+       /* return response()->json(null, 201);*/
+        return ArticleResource::make($article);
+    }
 }
