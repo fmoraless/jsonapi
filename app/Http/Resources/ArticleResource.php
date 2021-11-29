@@ -12,7 +12,7 @@ class ArticleResource extends JsonResource
      * @param  \Illuminate\Http\Request  $request
      * @return array|\Illuminate\Contracts\Support\Arrayable|\JsonSerializable
      */
-    public function toArray($request)
+    public function toArray($request): array
     {
         return [
             'type' => 'articles',
@@ -22,7 +22,9 @@ class ArticleResource extends JsonResource
                 'slug' => $this->resource->slug,
                 'content' => $this->resource->content
             ],
-            'self' => route('api.v1.articles.show', $this->resource)
+            'links' => [
+                'self' => route('api.v1.articles.show', $this->resource)
+            ]
         ];
     }
 }
