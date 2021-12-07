@@ -30,7 +30,10 @@ class ListArticlesTest extends TestCase
                     'slug' => $article->slug,
                     'content' => $article->content
                 ],
-                'self' => route('api.v1.articles.show', $article)
+                'links' => [
+                    'self' => route('api.v1.articles.show', $article)
+                ]
+
             ],
         ]);
     }
