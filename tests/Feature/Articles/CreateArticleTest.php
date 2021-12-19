@@ -59,30 +59,19 @@ class CreateArticleTest extends TestCase
             ]
         ]); //se puede usar ->dump() para ver detalle de error
         /*se espera un error de validacion en el campo title*/
-        $response->assertJsonValidationErrors('data.attributes.title');
-        /*$article = Article::first();*/
-        /*
-             * $response->assertHeader(
-                'Location',
-                route('api.v1.articles.show', $article)
-            );
-        */
-        /*
-             * $response->assertExactJson([
-                'data' => [
-                    'type' => 'articles',
-                    'id' => (string) $article->getRouteKey(),
-                    'attributes' => [
-                        'title' => 'Nuevo artículo',
-                        'slug' => 'nuevo-articulo',
-                        'content' => 'Contenido del artículo',
-                    ],
-                    'links' => [
-                        'self' => route('api.v1.articles.show', $article)
-                    ]
-                ]
-            ]);
-        */
+
+        $response->assertJsonStructure([
+            'errors' => [
+                ['title', 'detail', 'source' => ['pointer']]
+            ]
+        ])->assertJsonFragment([
+            'source' => ['pointer' => '/data/attributes/title']
+        ])->assertHeader(
+            'content-type', 'application/vnd.api+json'
+        )->assertStatus(422);
+
+        // $response->assertJsonValidationErrors('data.attributes.title');
+
     }
 
     /** @test */
