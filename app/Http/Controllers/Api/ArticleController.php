@@ -20,7 +20,7 @@ class ArticleController extends Controller
         return ArticleCollection::make(Article::all());
     }
 
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $article = Article::create([
             'title' => $request->input('data.attributes.title'),
