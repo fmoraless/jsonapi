@@ -5,11 +5,14 @@ namespace Tests\Feature\Articles;
 use App\Models\Article;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
+use Illuminate\Testing\TestResponse;
 use Tests\TestCase;
 
 class CreateArticleTest extends TestCase
 {
     use RefreshDatabase;
+
+
     /** @test */
     public function can_create_articles()
     {
@@ -53,6 +56,7 @@ class CreateArticleTest extends TestCase
             'data' => [
                 'type' => 'articles',
                 'attributes' => [
+                    'title' => 'Nuevo artículo',
                     'slug' => 'nuevo-articulo',
                     'content' => 'Contenido del artículo',
                 ]
@@ -60,17 +64,10 @@ class CreateArticleTest extends TestCase
         ]); //se puede usar ->dump() para ver detalle de error
         /*se espera un error de validacion en el campo title*/
 
-        $response->assertJsonStructure([
-            'errors' => [
-                ['title', 'detail', 'source' => ['pointer']]
-            ]
-        ])->assertJsonFragment([
-            'source' => ['pointer' => '/data/attributes/title']
-        ])->assertHeader(
-            'content-type', 'application/vnd.api+json'
-        )->assertStatus(422);
 
-        // $response->assertJsonValidationErrors('data.attributes.title');
+
+
+        $response->assertJsonApiValidationErrors('title');
 
     }
 
@@ -88,7 +85,7 @@ class CreateArticleTest extends TestCase
             ]
         ]); //se puede usar ->dump() para ver detalle de error
         /*se espera un error de validacion en el campo title*/
-        $response->assertJsonValidationErrors('data.attributes.title');
+        $response->assertJsonApiValidationErrors('title');
 
     }
 
@@ -105,7 +102,7 @@ class CreateArticleTest extends TestCase
             ]
         ]); //se puede usar ->dump() para ver detalle de error
         /*se espera un error de validacion en el campo title*/
-        $response->assertJsonValidationErrors('data.attributes.slug');
+        $response->assertJsonApiValidationErrors('slug');
 
     }
 
@@ -122,7 +119,7 @@ class CreateArticleTest extends TestCase
             ]
         ]); //se puede usar ->dump() para ver detalle de error
         /*se espera un error de validacion en el campo title*/
-        $response->assertJsonValidationErrors('data.attributes.content');
+        $response->assertJsonApiValidationErrors('content');
 
     }
 }
