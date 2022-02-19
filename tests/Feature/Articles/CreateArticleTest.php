@@ -6,6 +6,7 @@ use App\Models\Article;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Testing\TestResponse;
+use Tests\MakesJsonApiRequests;
 use Tests\TestCase;
 
 class CreateArticleTest extends TestCase
@@ -56,16 +57,12 @@ class CreateArticleTest extends TestCase
             'data' => [
                 'type' => 'articles',
                 'attributes' => [
-                    'title' => 'Nuevo artículo',
                     'slug' => 'nuevo-articulo',
                     'content' => 'Contenido del artículo',
                 ]
             ]
         ]); //se puede usar ->dump() para ver detalle de error
         /*se espera un error de validacion en el campo title*/
-
-
-
 
         $response->assertJsonApiValidationErrors('title');
 
@@ -118,7 +115,7 @@ class CreateArticleTest extends TestCase
                 ]
             ]
         ]); //se puede usar ->dump() para ver detalle de error
-        /*se espera un error de validacion en el campo title*/
+        /*se espera un error de validacion en el campo content*/
         $response->assertJsonApiValidationErrors('content');
 
     }

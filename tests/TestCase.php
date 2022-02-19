@@ -8,7 +8,7 @@ use phpDocumentor\Reflection\Types\Parent_;
 
 abstract class TestCase extends BaseTestCase
 {
-    use CreatesApplication, MakesJsonApiRequest;
+    use CreatesApplication, MakesJsonApiRequests;
 
 
 }
