@@ -30,7 +30,10 @@ class ListArticlesTest extends TestCase
                     'slug' => $article->slug,
                     'content' => $article->content
                 ],
-                'self' => route('api.v1.articles.show', $article)
+                'links' => [
+                    'self' => route('api.v1.articles.show', $article)
+                ]
+
             ],
         ]);
     }
@@ -41,7 +44,7 @@ class ListArticlesTest extends TestCase
         /*$this->withoutExceptionHandling();*/
         $articles = Article::factory()->count(3)->create();
 
-        $response = $this->getJson(route('api.v1.articles.index'))->dump();
+        $response = $this->getJson(route('api.v1.articles.index'));
 
         $response->assertExactJson([
             'data' => [
@@ -54,7 +57,7 @@ class ListArticlesTest extends TestCase
                         'content' => $articles[0]->content,
                     ],
                     'links' => [
-                        'self' => route('api.v1.articles.index', $articles[0])
+                        'self' => route('api.v1.articles.show', $articles[0])
                     ]
                 ],
                 [
@@ -66,7 +69,7 @@ class ListArticlesTest extends TestCase
                         'content' => $articles[1]->content,
                     ],
                     'links' => [
-                        'self' => route('api.v1.articles.index', $articles[1])
+                        'self' => route('api.v1.articles.show', $articles[1])
                     ]
                 ],
                 [
@@ -78,7 +81,7 @@ class ListArticlesTest extends TestCase
                         'content' => $articles[2]->content,
                     ],
                     'links' => [
-                        'self' => route('api.v1.articles.index', $articles[2])
+                        'self' => route('api.v1.articles.show', $articles[2])
                     ]
                 ]
             ],
