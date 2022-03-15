@@ -3,12 +3,16 @@
 namespace Tests;
 
 use Closure;
+use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
+use PhpParser\Node\Scalar\String_;
 use PHPUnit\Framework\Assert as PHPUnit;
 use PHPUnit\Framework\ExpectationFailedException;
 
 trait MakesJsonApiRequests
 {
+    protected bool $formatJsonApiDocument = true;
+
     protected function setUp(): void
     {
         parent::setUp();
@@ -18,10 +22,23 @@ trait MakesJsonApiRequests
             $this->assertJsonApiValidationErrors()
         );
     }
+
+    public function withoutJsonApiDocumentFormatting()
+    {
+        $this->formatJsonApiDocument = false;
+    }
     public function json($method, $uri, array $data = [], array $headers = []): TestResponse
     {
         $headers['accept'] = 'application/vnd.api+json';
-        return parent::json($method, $uri, $data, $headers);
+
+        if ($this->formatJsonApiDocument){
+            $formattedData['data']['attributes'] = $data;
+
+            $formattedData['data']['type'] = (String) (Str::of($uri)->after('api/v1/'));
+        }
+
+        //dd($formattedData);
+        return parent::json($method, $uri, $formattedData ?? $data, $headers);
     }
     public function postJson($uri, array $data = [], array $headers = []): TestResponse
     {
@@ -42,9 +59,13 @@ trait MakesJsonApiRequests
         return function ($attribute) {
             /** @var TestResponse $this */
 
+             $pointer = Str::of($attribute)->startsWith('data')
+                ? "/".str_replace('.', '/', $attribute)
+                : "/data/attributes/{$attribute}";
+
             try {
                 $this->assertJsonFragment([
-                    'source' => ['pointer' => "/data/attributes/{$attribute}"]
+                    'source' => ['pointer' => $pointer ]
                 ]);
             }catch (ExpectationFailedException $e) {
                 PHPUnit::fail(
