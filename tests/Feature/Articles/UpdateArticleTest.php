@@ -12,16 +12,15 @@ class UpdateArticleTest extends TestCase
     use RefreshDatabase;
 
     /** @test */
-    public function can_update_articles()
+    public function can_create_articles()
     {
-        $this->withoutExceptionHandling();
-        $response = $this->postJson(route('api.v1.articles.store'), [
-            'title' => 'Nuevo artículo',
-            'slug' => 'nuevo-articulo',
-            'content' => 'Contenido del artículo',
-        ])->assertCreated();
+        $article = Article::factory()->create();
+        $response = $this->patchjson(route('api.v1.articles.update', $article), [
+            'title' => 'Updated artículo',
+            'slug' => 'updated-articulo',
+            'content' => 'Article updated content',
+        ])->assertOk();
 
-        $article = Article::first();
         $response->assertHeader(
             'Location',
             route('api.v1.articles.show', $article)
@@ -31,14 +30,59 @@ class UpdateArticleTest extends TestCase
                 'type' => 'articles',
                 'id' => (string) $article->getRouteKey(),
                 'attributes' => [
-                    'title' => 'Nuevo artículo',
-                    'slug' => 'nuevo-articulo',
-                    'content' => 'Contenido del artículo',
+                    'title' => 'Updated artículo',
+                    'slug' => 'updated-articulo',
+                    'content' => 'Article updated content',
                 ],
                 'links' => [
                     'self' => route('api.v1.articles.show', $article)
                 ]
             ]
         ]);
+    }
+
+    /** @test */
+    public function title_is_required()
+    {
+        $article = Article::factory()->create();
+        $this->patchJson(route('api.v1.articles.update', $article), [
+            'slug' => 'updated-articulo',
+            'content' => 'Contenido updated del artículo',
+        ])->assertJsonApiValidationErrors('title');
+
+    }
+
+    /** @test */
+    public function title_must_be_at_least_4_characters()
+    {
+        $article = Article::factory()->create();
+        $this->patchJson(route('api.v1.articles.update', $article), [
+            'title' => 'Nue',
+            'slug' => 'nuevo-articulo',
+            'content' => 'Contenido del artículo',
+        ])->assertJsonApiValidationErrors('title');
+
+    }
+
+    /** @test */
+    public function slug_is_required()
+    {
+        $article = Article::factory()->create();
+        $this->patchJson(route('api.v1.articles.update', $article), [
+            'title' => 'Nuevo articulo',
+            'content' => 'Contenido del artículo',
+        ])->assertJsonApiValidationErrors('slug');
+
+    }
+
+    /** @test */
+    public function content_is_required()
+    {
+        $article = Article::factory()->create();
+        $this->patchJson(route('api.v1.articles.update', $article), [
+            'title' => 'Nuevo articulo',
+            'slug' => 'nuevo-articulo',
+        ])->assertJsonApiValidationErrors('content');
+
     }
 }
