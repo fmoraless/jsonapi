@@ -20,7 +20,7 @@ class ArticleController extends Controller
 
     public function index(Request $request): ArticleCollection
     {
-        $sortField = $request->input('sort');
+        $sortFields = explode(',', $request->input('sort')));
 
         $sortDirection = Str::of($sortField)->startsWith('-') ? 'desc' : 'asc';
 
