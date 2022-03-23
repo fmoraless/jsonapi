@@ -100,9 +100,20 @@ class SortArticlesTest extends TestCase
 
         $this->getJson($url)->assertSeeInOrder([
             'C content',
-            'B content',
             'A content',
+            'B content',
         ]);
+    }
+
+    /** @test */
+    public function cannot_sort_articles_by_unknown_fields()
+    {
+        Article::factory(3)->create();
+
+        // articles?sort=unknown
+        $url = route('api.v1.articles.index', ['sort' => 'unknown']);
+
+        $this->getJson($url)->assertStatus(400);
     }
 
 }
