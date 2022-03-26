@@ -23,7 +23,14 @@ class ArticleController extends Controller
 
         $articles = Article::allowedSorts(['title', 'content']);
 
-        return ArticleCollection::make($articles->get());
+        return ArticleCollection::make(
+            $articles->paginate(
+                $perPage = request('page.size', 15),
+                $columns = ['*'],
+                $pageName = 'page[number]',
+                $page = request('page.number', 1)
+            )->appends(request()->only('sort','page.size'))
+        );
     }
 
     public function store(SaveArticleRequest $request): ArticleResource
