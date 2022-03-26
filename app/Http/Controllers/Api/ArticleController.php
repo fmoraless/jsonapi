@@ -18,25 +18,10 @@ class ArticleController extends Controller
         return ArticleResource::make($article);
     }
 
-    public function index(Request $request): ArticleCollection
+    public function index(): ArticleCollection
     {
-        $articles = Article::query();
 
-        if ($request->filled('sort')) {
-            $sortFields = explode(',', $request->input('sort'));
-
-            $allowedSorts = ['title', 'content'];
-
-            foreach ($sortFields as $sortField) {
-                $sortDirection = Str::of($sortField)->startsWith('-') ? 'desc' : 'asc';
-
-                $sortField = ltrim($sortField, '-');
-
-                abort_unless(in_array($sortField, $allowedSorts), 400);
-
-                $articles->orderBy($sortField, $sortDirection);
-            }
-        }
+        $articles = Article::allowedSorts(['title', 'content']);
 
         return ArticleCollection::make($articles->get());
     }
