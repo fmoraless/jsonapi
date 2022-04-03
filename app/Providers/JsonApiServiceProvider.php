@@ -2,9 +2,14 @@
 
 namespace App\Providers;
 
-use Illuminate\Database\Query\Builder;
+use App\JsonApi\JsonApiQueryBuilder;
+use App\JsonApi\JsonApiTestResponse;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Str;
+use Illuminate\Testing\TestResponse;
+use PHPUnit\Framework\Assert as PHPUnit;
+use PHPUnit\Framework\ExpectationFailedException;
 
 class JsonApiServiceProvider extends ServiceProvider
 {
@@ -25,25 +30,8 @@ class JsonApiServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Builder::macro('allowedSorts', function ($allowedSorts) {
+        Builder::mixin(new JsonApiQueryBuilder());
 
-            if (request()->filled('sort')) {
-                $sortFields = explode(',', request()->input('sort'));
-
-                $allowedSorts = ['title', 'content'];
-
-                foreach ($sortFields as $sortField) {
-                    $sortDirection = Str::of($sortField)->startsWith('-') ? 'desc' : 'asc';
-
-                    $sortField = ltrim($sortField, '-');
-
-                    abort_unless(in_array($sortField, $allowedSorts), 400);
-
-                    $this->orderBy($sortField, $sortDirection);
-                }
-            }
-
-            return $this;
-        });
+        TestResponse::mixin(new JsonApiTestResponse());
     }
 }
