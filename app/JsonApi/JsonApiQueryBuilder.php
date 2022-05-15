@@ -37,8 +37,8 @@ class JsonApiQueryBuilder
         return function ($allowedFilters) {
             /** @var Builder $this */
             foreach (request('filter', []) as $filter => $value) {
-                dump($filter); //year
-                dump($value);
+                //dump($filter); //year
+                //dump($value);
                 abort_unless(in_array($filter, $allowedFilters), 400);
 
                 $this->hasNamedScope($filter)
@@ -63,4 +63,31 @@ class JsonApiQueryBuilder
         };
     }
 
+    public function sparseFieldset(): Closure
+    {
+        return function () {
+            /** @var Builder $this */
+            if (request()->isNotFilled('fields')) {
+                return $this;
+            }
+
+            $resourceType = $this->model->getTable();
+
+            if (property_exists($this->model, 'resourceType')) {
+                $resourceType = $this->model->resourceType;
+            }
+
+
+            //Obtener los valores por separado
+            $fields = (explode(',', request('fields.'.$resourceType)));
+
+            $routeKeyName = $this->model->getRouteKeyName();
+
+            if (! in_array($routeKeyName, $fields)) {
+                $fields[] = 'slug';
+            }
+            return $this->addSelect($fields);
+
+        };
+    }
 }

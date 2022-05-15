@@ -19,5 +19,5 @@ use App\Http\Controllers\Api\ArticleController;
     return $request->user();
 });*/
 
-Route::resource('articles',ArticleController::class)
+Route::apiResource('articles',ArticleController::class)
     ->names('api.v1.articles');

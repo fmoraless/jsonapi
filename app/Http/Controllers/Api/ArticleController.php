@@ -13,8 +13,12 @@ use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
-    public function show(Article $article): ArticleResource
+    public function show($article): ArticleResource
     {
+        $article = Article::where('slug', $article)
+            ->sparseFieldset()
+            ->firstOrFail();
+
         return ArticleResource::make($article);
     }
 
@@ -24,6 +28,7 @@ class ArticleController extends Controller
         $articles = Article::query()
             ->allowedFilters(['title', 'content', 'month', 'year'])
             ->allowedSorts(['title', 'content'])
+            ->sparseFieldset()
             ->jsonPaginate();
 
         return ArticleCollection::make($articles);
