@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
 
 class Article extends Model
 {
@@ -27,6 +28,12 @@ class Article extends Model
         'user_id' => 'integer',
     ];
 
+    // public $resourceType = 'articles';
+
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
 
     public function category()
     {
@@ -37,4 +44,24 @@ class Article extends Model
     {
         return $this->belongsTo(\App\Models\User::class);
     }
+
+    public function scopeYear(Builder $query, $year)
+    {
+        $query->whereYear('created_at', $year);
+    }
+
+    public function scopeMonth(Builder $query, $month)
+    {
+        $query->whereMonth('created_at', $month);
+    }
+
+    /*public function scopeTitle(Builder $query, $value)
+    {
+        $query->where('title','LIKE', '%'.$value.'%');
+    }
+
+    public function scopeContent(Builder $query, $value)
+    {
+        $query->where('content', 'LIKE', '%'.$value.'%');
+    }*/
 }

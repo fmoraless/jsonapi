@@ -44,17 +44,6 @@ class Handler extends ExceptionHandler
     protected function invalidJson($request, ValidationException $exception): JsonResponse
     {
         $title = $exception->getMessage();
-        /*foreach ($exception->errors() as $field => $messages) {
-            $pointer = "/".str_replace('.', '/', $field);
-
-            $errors[] = [
-                'title'  => $title,
-                'detail' => $messages[0],
-                'source' => [
-                    'pointer' => $pointer
-                ]
-            ];
-        }*/
         /* en vez de foreach, se puede utilizar collections */
         return response()->json([
             'errors' => collect($exception->errors())
