@@ -22,7 +22,7 @@ class CreateArticleTest extends TestCase
                'title' => 'Nuevo artículo',
                'slug' => 'nuevo-articulo',
                'content' => 'Contenido del artículo',
-           ])->assertCreated();
+           ])->dump()->assertCreated();
 
         $article = Article::first();
         $response->assertHeader(
