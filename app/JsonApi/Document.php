@@ -37,9 +37,18 @@ class Document extends Collection
         return $this;
     }
 
-    public function relationships()
+    public function relationships(array $relationships):Document
     {
-        //TODO:
+        foreach ($relationships as $key => $relationship) {
+            $this->items['data']['relationships'][$key] = [
+                'data' => [
+                    'type' => $relationship->getResourceType(),
+                    'id' => $relationship->getRouteKey()
+                ]
+            ];
+        }
+
+        return $this;
     }
 
 }
