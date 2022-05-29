@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\ArticleController;
+use App\Http\Controllers\Api\CategoryController;
+use Illuminate\Support\Facades\Route;
 
 /*
 |--------------------------------------------------------------------------
@@ -19,5 +19,8 @@ use App\Http\Controllers\Api\ArticleController;
     return $request->user();
 });*/
 
-Route::apiResource('articles',ArticleController::class)
-    ->names('api.v1.articles');
+Route::apiResource('articles',ArticleController::class);
+Route::apiResource('categories',CategoryController::class)
+    ->only('index', 'show');
+
+
