@@ -33,19 +33,10 @@ class CreateArticleTest extends TestCase
             'Location',
             route('api.v1.articles.show', $article)
         );
-        $response->assertExactJson([
-           'data' => [
-               'type' => 'articles',
-               'id' => (string) $article->getRouteKey(),
-               'attributes' => [
-                   'title' => 'Nuevo artículo',
-                   'slug' => 'nuevo-articulo',
-                   'content' => 'Contenido del artículo',
-               ],
-               'links' => [
-                   'self' => route('api.v1.articles.show', $article)
-               ]
-           ]
+        $response->assertJsonApiResource($article, [
+            'title' => 'Nuevo artículo',
+            'slug' => 'nuevo-articulo',
+            'content' => 'Contenido del artículo'
         ]);
     }
 
