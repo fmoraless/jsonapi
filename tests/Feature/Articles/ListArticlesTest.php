@@ -25,7 +25,7 @@ class ListArticlesTest extends TestCase
             'title' => $article->title,
             'slug' => $article->slug,
             'content' => $article->content
-        ]);
+        ])->assertJsonApiRelationshipsLinks($article, ['category']);
     }
 
     /** @test */
@@ -33,11 +33,14 @@ class ListArticlesTest extends TestCase
     {
         /*$this->withoutExceptionHandling();*/
         $articles = Article::factory()->count(3)->create();
-
+        /* escuchar consultas SQL */
+        \DB::listen(function($query){
+            var_dump($query->sql);
+        });
         $response = $this->getJson(route('api.v1.articles.index'));
 
         $response->assertJsonApiResourceCollection($articles, [
             'title', 'slug', 'content'
-        ]);
+        ])->dump();
     }
 }

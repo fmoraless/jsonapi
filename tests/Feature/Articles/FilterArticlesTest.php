@@ -3,6 +3,7 @@
 namespace Tests\Feature\Articles;
 
 use App\Models\Article;
+use App\Models\Category;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
@@ -120,6 +121,30 @@ class FilterArticlesTest extends TestCase
             ->assertSee('Article from month 3')
             ->assertSee('Another Article from month 3')
             ->assertDontSee('Article from month 1')
+        ;
+    }
+
+    /** @test */
+    public function can_filter_articles_by_category()
+    {
+        Article::factory()->count(2)->create();
+        $cat1 = Category::factory()->hasArticles(3)->create(['slug' => 'cat-1']);
+        $cat2 = Category::factory()->hasArticles()->create(['slug' => 'cat-2']);
+
+        // articles?filter[categories]=cat-1
+        /* la especificacion JsonApi indica que podemos pasr multiples parametros separados por , (coma)*/
+        $url = route('api.v1.articles.index', [
+            'filter' => [
+                'categories' => 'cat-1, cat-2'
+            ]
+        ]);
+        /* vemos los 3 art de cat-1 en la respuesta  y no vemos el de la cat-2*/
+        $this->getJson($url)
+            ->assertJsonCount(3, 'data')
+            ->assertSee($cat1->articles[0]->title)
+            ->assertSee($cat1->articles[1]->title)
+            ->assertSee($cat1->articles[2]->title)
+            ->assertDontSee($cat2->articles[0]->title)
         ;
     }
 

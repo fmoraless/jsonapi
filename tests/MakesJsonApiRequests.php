@@ -2,6 +2,7 @@
 
 namespace Tests;
 
+use App\JsonApi\Document;
 use Closure;
 use Illuminate\Support\Str;
 use Illuminate\Testing\TestResponse;
@@ -25,13 +26,26 @@ trait MakesJsonApiRequests
         $id = (string) Str::of($path)->after($type)->replace('/', '');
 
         //dump(array_filter($formattedData['data']));
-        return [
+        return Document::type($type)
+            ->id($id)
+            ->attributes($data)
+            ->relationshipData($data['_relationships'] ?? [])
+            ->toArray();
+        /*return [
           'data' => array_filter([
               'type' => $type,
               'id' => $id,
-              'attributes' => $data
+              'attributes' => $data,
+              'relationships' => [
+                  'category' => [
+                      'data' => [
+                          'id' => 'category-slug',
+                          'type' => 'categories'
+                      ]
+                  ]
+              ]
           ])
-        ];
+        ];*/
     }
 
     protected function setUp(): void

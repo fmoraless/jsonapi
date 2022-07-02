@@ -15,9 +15,13 @@ class JsonApiTestResponse
         return function ($attribute) {
             /** @var TestResponse $this */
 
-            $pointer = Str::of($attribute)->startsWith('data')
-                ? "/".str_replace('.', '/', $attribute)
-                : "/data/attributes/{$attribute}";
+            $pointer = "/data/attributes/{$attribute}";
+
+            if (Str::of($attribute)->startsWith('data')) {
+                $pointer = "/".str_replace('.', '/', $attribute);
+            } elseif (Str::of($attribute)->startsWith('relationships')) {
+                $pointer = "/data/".str_replace('.', '/', $attribute).'/data/id';
+            }
 
             try {
                 $this->assertJsonFragment([
@@ -44,7 +48,7 @@ class JsonApiTestResponse
                 );
             }
 
-            $this->assertHeader(
+            return $this->assertHeader(
                 'content-type', 'application/vnd.api+json'
             )->assertStatus(422);
         };
@@ -54,7 +58,7 @@ class JsonApiTestResponse
     {
         return function ($model, $attributes) {
             /* @var TestResponse $this */
-            $this->assertJson([
+            return $this->assertJson([
                 'data' => [
                     'type' => $model->getResourceType(),
                     'id' => (string) $model->getRouteKey(),
@@ -68,6 +72,28 @@ class JsonApiTestResponse
                 'Location',
                 route('api.v1.'.$model->getResourceType().'.show', $model)
             );
+        };
+    }
+
+    public function assertJsonApiRelationshipsLinks():Closure
+    {
+        return function ($model, $relations) {
+            /** @var TestResponse $this */
+            foreach ($relations as $relation) {
+                $this->assertJson([
+                    'data' => [
+                        'relationships' => [
+                            'category' => [
+                                'links' => [
+                                    'self' => route("api.v1.{$model->getResourceType()}.relationships.{$relation}", $model),
+                                    'related' => route("api.v1.{$model->getResourceType()}.{$relation}", $model)
+                                ]
+                            ]
+                        ]
+                    ]
+                ]);
+            }
+            return $this;
         };
     }
 
@@ -93,6 +119,7 @@ class JsonApiTestResponse
                     ]
                 ]);
             }
+            return $this;
         };
     }
 

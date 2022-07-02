@@ -18,4 +18,17 @@ class ArticleResource extends JsonResource
         ];
     }
 
+    public function getRelationshipLinks():array
+    {
+        return ['category'];
+    }
+
+    public function getIncludes():array
+    {
+        return [
+            /* solo devolverá una categoría en caso de ser cargada */
+            CategoryResource::make($this->whenLoaded('category'))
+        ];
+    }
+
 }

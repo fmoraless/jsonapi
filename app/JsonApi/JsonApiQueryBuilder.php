@@ -50,6 +50,25 @@ class JsonApiQueryBuilder
             return $this;
         };
     }
+
+    public function allowedIncludes(): Closure
+    {
+        return function($allowedIncludes) {
+            /** @var Builder $this */
+        if (request()->isNotFilled('include')) {
+            return $this;
+        }
+        $includes = explode(',', request()->input('include'));
+        //dd($includes);
+        foreach ($includes as $include) {
+            abort_unless(in_array($include, $allowedIncludes), 400);
+            $this->with($include);
+        }
+
+        return $this;
+        };
+    }
+
     public function jsonPaginate(): Closure
     {
         return function () {
