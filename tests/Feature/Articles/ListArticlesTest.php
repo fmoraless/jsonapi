@@ -33,7 +33,10 @@ class ListArticlesTest extends TestCase
     {
         /*$this->withoutExceptionHandling();*/
         $articles = Article::factory()->count(3)->create();
-
+        /* escuchar consultas SQL */
+        \DB::listen(function($query){
+            var_dump($query->sql);
+        });
         $response = $this->getJson(route('api.v1.articles.index'));
 
         $response->assertJsonApiResourceCollection($articles, [

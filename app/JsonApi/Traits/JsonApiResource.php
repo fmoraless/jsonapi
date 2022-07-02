@@ -5,6 +5,7 @@ namespace App\JsonApi\Traits;
 use App\Http\Resources\CategoryResource;
 use App\JsonApi\Document;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Http\Resources\MissingValue;
 
 trait JsonApiResource
 {
@@ -14,14 +15,21 @@ trait JsonApiResource
     public function toArray($request): array
     {
         if ($request->filled('include')) {
-            $this->with['included'] = $this->getIncludes();
+            //$this->with['included'] = $this->getIncludes();
+            foreach ($this->getIncludes() as $include) {
+                //dump($include);
+                if ($include->resource instanceof MissingValue) {
+                    continue;
+                }
+                $this->with['included'][] = $include;
+            }
         }
-        return Document::type($this->getResourceType())
+        return Document::type($this->resource->getResourceType())
             ->id($this->resource->getRouteKey())
             ->attributes($this->filterAttributes($this->toJsonApi()))
             ->relationshipLinks($this->getRelationshipLinks())
             ->links([
-                'self' => route('api.v1.'.$this->getResourceType().'.show', $this->resource)
+                'self' => route('api.v1.'.$this->resource->getResourceType().'.show', $this->resource)
             ])
             ->get('data');
         /*return [
@@ -34,9 +42,9 @@ trait JsonApiResource
         ];*/
     }
 
-    public function getIncludes()
+    public function getIncludes(): array
     {
-        [];
+        return [];
     }
 
     public function getRelationshipLinks():array
@@ -77,6 +85,9 @@ trait JsonApiResource
             foreach ($resources as $resource) {
                 foreach ($resource->getIncludes() as $include) {
                     //dump($include);
+                    if ($include->resource instanceof MissingValue) {
+                        continue;
+                    }
                     $collection->with['included'][] = $include;
                 }
 
