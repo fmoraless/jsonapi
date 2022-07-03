@@ -83,7 +83,7 @@ class JsonApiTestResponse
                 $this->assertJson([
                     'data' => [
                         'relationships' => [
-                            'category' => [
+                            $relation => [
                                 'links' => [
                                     'self' => route("api.v1.{$model->getResourceType()}.relationships.{$relation}", $model),
                                     'related' => route("api.v1.{$model->getResourceType()}.{$relation}", $model)

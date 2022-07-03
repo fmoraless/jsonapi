@@ -11,7 +11,7 @@ class IncludeCategoryTest extends TestCase
 {
     use RefreshDatabase;
     /** @test */
-    public function can_include_relates_category_of_an_article()
+    public function can_include_related_category_of_an_article()
     {
         $article = Article::factory()->create();
 
