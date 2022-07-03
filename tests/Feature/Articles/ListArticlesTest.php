@@ -41,6 +41,6 @@ class ListArticlesTest extends TestCase
 
         $response->assertJsonApiResourceCollection($articles, [
             'title', 'slug', 'content'
-        ])->dump();
+        ]);
     }
 }
