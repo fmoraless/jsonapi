@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\Api\ArticleAuthorController;
+use App\Http\Controllers\Api\ArticleCategoryController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\CategoryController;
@@ -26,15 +28,19 @@ Route::apiResource('categories',CategoryController::class)
 Route::apiResource('authors',AuthorController::class)
     ->only('index', 'show');
 /* category */
-Route::get('articles/{article}/relationships/category', fn() => 'TODO')
-    ->name('articles.relationships.category');
+Route::get('articles/{article}/relationships/category', [
+        ArticleCategoryController::class, 'index'
+    ])->name('articles.relationships.category');
 
-Route::get('articles/{article}/category', fn() => 'TODO')
-    ->name('articles.category');
+Route::get('articles/{article}/category', [
+        ArticleCategoryController::class, 'show'
+    ])->name('articles.category');
 
 /* author */
-Route::get('articles/{article}/relationships/author', fn() => 'TODO')
-    ->name('articles.relationships.author');
+Route::get('articles/{article}/relationships/author', [
+        ArticleAuthorController::class, 'index'
+    ])->name('articles.relationships.author');
 
-Route::get('articles/{article}/author', fn() => 'TODO')
-    ->name('articles.author');
+Route::get('articles/{article}/author', [
+        ArticleAuthorController::class, 'show'
+    ])->name('articles.author');
