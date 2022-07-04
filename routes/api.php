@@ -36,6 +36,10 @@ Route::get('articles/{article}/category', [
         ArticleCategoryController::class, 'show'
     ])->name('articles.category');
 
+Route::patch('articles/{article}/relationships/category', [
+    ArticleCategoryController::class, 'update'
+])->name('articles.relationships.category');
+
 /* author */
 Route::get('articles/{article}/relationships/author', [
         ArticleAuthorController::class, 'index'
@@ -44,3 +48,8 @@ Route::get('articles/{article}/relationships/author', [
 Route::get('articles/{article}/author', [
         ArticleAuthorController::class, 'show'
     ])->name('articles.author');
+
+Route::patch('articles/{article}/relationships/author', [
+    ArticleAuthorController::class, 'update'
+])->name('articles.relationships.author');
+
