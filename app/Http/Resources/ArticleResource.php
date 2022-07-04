@@ -20,14 +20,15 @@ class ArticleResource extends JsonResource
 
     public function getRelationshipLinks():array
     {
-        return ['category'];
+        return ['category', 'author'];
     }
 
     public function getIncludes():array
     {
         return [
             /* solo devolverá una categoría en caso de ser cargada */
-            CategoryResource::make($this->whenLoaded('category'))
+            CategoryResource::make($this->whenLoaded('category')),
+            AuthorResource::make($this->whenLoaded('author'))
         ];
     }
 

@@ -12,6 +12,13 @@ trait JsonApiResource
     /* esta funcion abstracta, es para obligar a implementar el toJson en los Jsonresources*/
     abstract public function toJsonApi(): array;
 
+    public static function indetifier($resource): array
+    {
+        return Document::type($resource->getResourceType())
+            ->id($resource->getRouteKey())
+            ->toArray();
+    }
+
     public function toArray($request): array
     {
         if ($request->filled('include')) {

@@ -31,21 +31,7 @@ trait MakesJsonApiRequests
             ->attributes($data)
             ->relationshipData($data['_relationships'] ?? [])
             ->toArray();
-        /*return [
-          'data' => array_filter([
-              'type' => $type,
-              'id' => $id,
-              'attributes' => $data,
-              'relationships' => [
-                  'category' => [
-                      'data' => [
-                          'id' => 'category-slug',
-                          'type' => 'categories'
-                      ]
-                  ]
-              ]
-          ])
-        ];*/
+
     }
 
     protected function setUp(): void

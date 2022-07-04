@@ -25,7 +25,7 @@ class ListArticlesTest extends TestCase
             'title' => $article->title,
             'slug' => $article->slug,
             'content' => $article->content
-        ])->assertJsonApiRelationshipsLinks($article, ['category']);
+        ])->assertJsonApiRelationshipsLinks($article, ['category', 'author']);
     }
 
     /** @test */
@@ -41,6 +41,6 @@ class ListArticlesTest extends TestCase
 
         $response->assertJsonApiResourceCollection($articles, [
             'title', 'slug', 'content'
-        ])->dump();
+        ]);
     }
 }
