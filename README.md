@@ -10,7 +10,7 @@ API desarrollada con TDD, con especificación JSON:API utilizando Laravel.
 - CRUD de Autores
 - CRUD de Categorias
 - Testeados basjo TDD (Desarrollo guiado por pruebas)
-- Autenticación con Sanctum
+- Autenticación con Sanctum (próximamente)
 
 
 ## Installación
@@ -38,10 +38,17 @@ Para ejecutar los test, use el siguiente comando:
 
 ## Screenshots
 
-![77 Tests passed](https://drive.google.com/file/d/1srU_xOxeQyWGiwot3QQmclqIBoAgsFUZ/view?usp=sharing/468x300?text=77+Tests+passed)
-![Postman Tests - Create Articles](https://drive.google.com/file/d/1L8wDBD18EK_nKD5VfncXK3nzAcczQzuL/view?usp=sharing/468x300?text=Postman+Tests+CreateArticles)
-![Postman Tests - List Articles](https://drive.google.com/file/d/1kZmqubt-Dny0q6S7OCUlecSYuu5jF3Id/view?usp=sharing/468x300?text=Postman+Tests+ListArticles)
+#### 77 Test Passed
+![77 Test Passed](https://drive.google.com/uc?export=view&id=1srU_xOxeQyWGiwot3QQmclqIBoAgsFUZ)
+### Postman Tests
+#### Create Articles
+![Postman Tests - Create Articles](https://drive.google.com/uc?export=view&id=1L8wDBD18EK_nKD5VfncXK3nzAcczQzuL)
+#### List Articles
+![Postman Tests - List Articles](https://drive.google.com/uc?export=view&id=1kZmqubt-Dny0q6S7OCUlecSYuu5jF3Id)
 
+
+
+    
 
 ## Feedback
 
