@@ -43,7 +43,7 @@ class SaveArticleRequest extends FormRequest
         ];
     }
 
-    public function validated()
+    public function validated($key = null, $default = null)
     {
         //return parent::validated()['data']['attributes'];
         $data = parent::validated()['data'];
