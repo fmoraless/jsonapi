@@ -5,6 +5,8 @@ use App\Http\Controllers\Api\ArticleCategoryController;
 use App\Http\Controllers\Api\ArticleController;
 use App\Http\Controllers\Api\AuthorController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\LoginController;
+use App\Http\Middleware\ValidateJsonApiDocument;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -53,3 +55,5 @@ Route::patch('articles/{article}/relationships/author', [
     ArticleAuthorController::class, 'update'
 ])->name('articles.relationships.author');
 
+Route::withoutMiddleware(ValidateJsonApiDocument::class)
+    ->post('login', LoginController::class)->name('login');

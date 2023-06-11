@@ -45,21 +45,24 @@ class Handler extends ExceptionHandler
 
     protected function invalidJson($request, ValidationException $exception): JsonResponse
     {
-        $title = $exception->getMessage();
-        /* en vez de foreach, se puede utilizar collections */
-        return response()->json([
-            'errors' => collect($exception->errors())
-                ->map(function ($messages, $field) use ($title) {
-                    return [
-                        'title'  => $title,
-                        'detail' => $messages[0],
-                        'source' => [
-                            'pointer' => "/".str_replace('.', '/', $field)
-                        ]
-                    ];
-                })->values()
-        ], 422, [
-            'content-type' => 'application/vnd.api+json'
-        ]);
+        if (! $request->routeIs('api.v1.login')) {
+            $title = $exception->getMessage();
+            /* en vez de foreach, se puede utilizar collections */
+            return response()->json([
+                'errors' => collect($exception->errors())
+                    ->map(function ($messages, $field) use ($title) {
+                        return [
+                            'title'  => $title,
+                            'detail' => $messages[0],
+                            'source' => [
+                                'pointer' => "/".str_replace('.', '/', $field)
+                            ]
+                        ];
+                    })->values()
+            ], 422, [
+                'content-type' => 'application/vnd.api+json'
+            ]);
+        }
+        return parent::invalidJson($request, $exception);
     }
 }
