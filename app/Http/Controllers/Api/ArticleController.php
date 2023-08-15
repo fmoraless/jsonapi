@@ -15,6 +15,11 @@ use Illuminate\Support\Str;
 
 class ArticleController extends Controller
 {
+    public function __construct() {
+        $this->middleware('auth:sanctum',[
+           'only' => ['store', 'update', 'destroy']
+        ]);
+    }
     public function show($article): JsonResource
     {
         $article = Article::where('slug', $article)
