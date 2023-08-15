@@ -12,6 +12,7 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Http\Response;
 use Illuminate\Support\Str;
+use Symfony\Component\HttpKernel\Exception\AccessDeniedHttpException;
 
 class ArticleController extends Controller
 {
@@ -52,14 +53,17 @@ class ArticleController extends Controller
 
     public function update(Article $article, SaveArticleRequest $request): ArticleResource
     {
-        //dd($request->validated());
+        $this->authorize('update', $article);
+
         $article->update($request->validated());
 
         return ArticleResource::make($article);
     }
 
-    public function destroy(Article $article): Response
+    public function destroy(Article $article, Request $request): Response
     {
+        $this->authorize('delete', $article);
+
         $article->delete();
         return response()->noContent();
     }
