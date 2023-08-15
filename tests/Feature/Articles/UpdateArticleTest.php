@@ -30,7 +30,7 @@ class UpdateArticleTest extends TestCase
     public function can_update_owned_articles()
     {
         $article = Article::factory()->create();
-        Sanctum::actingAs($article->author);
+        Sanctum::actingAs($article->author, ['articles:update']);
 
         $response = $this->patchjson(route('api.v1.articles.update', $article), [
             'title' => 'Updated artículo',

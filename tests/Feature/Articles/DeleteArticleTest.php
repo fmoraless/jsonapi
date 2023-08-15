@@ -31,7 +31,7 @@ class DeleteArticleTest extends TestCase
     public function can_delete_owned_article()
     {
         $article = Article::factory()->create();
-        Sanctum::actingAs($article->author);
+        Sanctum::actingAs($article->author, ['articles:delete']);
 
         $this->deleteJson(route('api.v1.articles.destroy', $article))
             ->assertNocontent();
