@@ -4,7 +4,7 @@
 API desarrollada con TDD, con especificación JSON:API utilizando Laravel.
 
 
-## Feartures
+## Features
 
 - CRUD de Articulos
 - CRUD de Autores
@@ -13,7 +13,7 @@ API desarrollada con TDD, con especificación JSON:API utilizando Laravel.
 - Autenticación con Sanctum (próximamente)
 
 
-## Installación
+## Instalación
 
 Puedes seguir estos pasos para la instalación:
 
